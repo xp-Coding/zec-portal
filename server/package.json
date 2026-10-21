@@ -1,0 +1,41 @@
+{
+  "name": "academia-fee-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Authoritative Financial & College Management API Server for ZEC Portal",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "server:dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "migrate": "tsx src/database/migrate.ts",
+    "seed": "tsx src/database/seed.ts",
+    "test": "vitest run --fileParallelism=false"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.14.0",
+    "@node-rs/argon2": "^2.0.2",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.8",
+    "@types/node": "^22.13.4",
+    "@types/supertest": "^6.0.2",
+    "supertest": "^7.0.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
+  }
+}

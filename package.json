@@ -1,0 +1,55 @@
+{
+  "name": "academia-fee-pro",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "ZEC Portal - College Management Desktop Software for Zakariya Educational Complex",
+  "workspaces": [
+    "server"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "server:dev": "npm --prefix server run dev",
+    "server:build": "npm --prefix server run build",
+    "server:start": "npm --prefix server run start",
+    "db:migrate": "npm --prefix server run migrate",
+    "db:seed": "npm --prefix server run seed",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:all": "npm test && npm --prefix server test"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.67.1",
+    "@tauri-apps/api": "^2.2.0",
+    "@tauri-apps/plugin-dialog": "^2.2.0",
+    "@tauri-apps/plugin-fs": "^2.2.0",
+    "@tauri-apps/plugin-opener": "^2.2.5",
+    "clsx": "^2.1.1",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
+    "lucide-react": "^0.475.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.54.2",
+    "tailwind-merge": "^2.6.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.2.4",
+    "@types/node": "^22.13.4",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.2",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0",
+    "vitest": "^3.0.5"
+  }
+}

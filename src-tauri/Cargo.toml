@@ -1,0 +1,21 @@
+[package]
+name = "academia-fee-pro"
+version = "1.0.0"
+description = "ZEC Portal - College Management Desktop Software for Zakariya Educational Complex"
+authors = ["Zakariya Educational Complex"]
+edition = "2021"
+
+[lib]
+name = "academia_fee_pro_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.0.5", features = [] }
+
+[dependencies]
+tauri = { version = "2.2.4", features = [] }
+tauri-plugin-opener = "2.2.5"
+tauri-plugin-dialog = "2.2.0"
+tauri-plugin-fs = "2.2.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
