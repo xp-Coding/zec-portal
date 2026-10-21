@@ -1,6 +1,6 @@
 [package]
 name = "academia-fee-pro"
-version = "1.0.0"
+version = "1.0.1"
 description = "ZEC Portal - College Management Desktop Software for Zakariya Educational Complex"
 authors = ["Zakariya Educational Complex"]
 edition = "2021"
