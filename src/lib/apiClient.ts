@@ -1,11 +1,37 @@
-const DEFAULT_API_BASE = ((import.meta as any).env?.VITE_API_URL as string) || 'http://localhost:4000/api';
+const DEFAULT_API_BASE = ((import.meta as any).env?.VITE_API_URL as string) || 'http://127.0.0.1:4000/api';
 
 export function getApiBaseUrl(): string {
-  return localStorage.getItem('zec_api_url') || DEFAULT_API_BASE;
+  const stored = localStorage.getItem('zec_api_url');
+  if (stored) return stored.replace(/\/+$/, '');
+  return DEFAULT_API_BASE;
 }
 
 export function setApiBaseUrl(url: string) {
-  localStorage.setItem('zec_api_url', url);
+  const cleaned = url.trim().replace(/\/+$/, '');
+  localStorage.setItem('zec_api_url', cleaned);
+}
+
+export async function testServerConnection(customUrl?: string): Promise<{ success: boolean; latencyMs?: number; message?: string }> {
+  const base = (customUrl || getApiBaseUrl()).replace(/\/+$/, '');
+  const healthUrl = `${base}/health`;
+  const start = performance.now();
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3500);
+    const res = await fetch(healthUrl, { method: 'GET', signal: controller.signal });
+    clearTimeout(timeout);
+    if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      return {
+        success: true,
+        latencyMs: Math.round(performance.now() - start),
+        message: data.college || data.system || 'Connected',
+      };
+    }
+    return { success: false, message: `Server responded with status ${res.status}` };
+  } catch (err: any) {
+    return { success: false, message: err.name === 'AbortError' ? 'Connection timed out' : 'Could not reach server' };
+  }
 }
 
 export function getAuthToken(): string | null {
@@ -31,6 +57,7 @@ export function getWorkstationId(): string {
 
 export interface ApiRequestOptions extends RequestInit {
   params?: Record<string, string | number | boolean | undefined>;
+  _retryFallback?: boolean;
 }
 
 export async function apiRequest<T = any>(endpoint: string, options: ApiRequestOptions = {}): Promise<T> {
@@ -84,7 +111,30 @@ export async function apiRequest<T = any>(endpoint: string, options: ApiRequestO
 
     return data as T;
   } catch (error: any) {
-    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+    if (error.name === 'TypeError' && (error.message.includes('fetch') || error.message.includes('network') || error.message.includes('Failed'))) {
+      // Auto-fallback between 127.0.0.1 and localhost if connecting locally
+      if (!options._retryFallback) {
+        if (url.includes('127.0.0.1:4000')) {
+          const fallbackBase = baseUrl.replace('127.0.0.1:4000', 'localhost:4000');
+          try {
+            const fallbackRes = await apiRequest<T>(endpoint, { ...options, _retryFallback: true });
+            setApiBaseUrl(fallbackBase);
+            return fallbackRes;
+          } catch {
+            // continue to throw standard error
+          }
+        } else if (url.includes('localhost:4000')) {
+          const fallbackBase = baseUrl.replace('localhost:4000', '127.0.0.1:4000');
+          try {
+            const fallbackRes = await apiRequest<T>(endpoint, { ...options, _retryFallback: true });
+            setApiBaseUrl(fallbackBase);
+            return fallbackRes;
+          } catch {
+            // continue to throw standard error
+          }
+        }
+      }
+
       const netError: any = new Error(
         `Unable to connect to ZEC Portal server at ${baseUrl}. Please check that the server is running and network connection is active.`
       );

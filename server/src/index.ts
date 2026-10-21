@@ -86,9 +86,19 @@ app.use(errorHandler);
 
 // Start server if executed directly
 if (process.argv[1]?.endsWith('index.ts') || process.argv[1]?.endsWith('index.js')) {
-  app.listen(config.port, config.host, () => {
-    console.log(`🚀 ZEC Portal Server running on http://${config.host}:${config.port}`);
-    console.log(`🏛️  College: ${config.college.name} (${config.college.shortName})`);
-    console.log(`💰 Database: ${config.database.url}`);
-  });
+  const isDefaultAny = config.host === '0.0.0.0' || !config.host;
+  // Binding without '0.0.0.0' enables dual-stack IPv4/IPv6 on Windows (supporting both 127.0.0.1 and localhost)
+  if (isDefaultAny) {
+    app.listen(config.port, () => {
+      console.log(`🚀 ZEC Portal Server running on http://127.0.0.1:${config.port} & http://localhost:${config.port}`);
+      console.log(`🏛️  College: ${config.college.name} (${config.college.shortName})`);
+      console.log(`💰 Database: ${config.database.url}`);
+    });
+  } else {
+    app.listen(config.port, config.host, () => {
+      console.log(`🚀 ZEC Portal Server running on http://${config.host}:${config.port}`);
+      console.log(`🏛️  College: ${config.college.name} (${config.college.shortName})`);
+      console.log(`💰 Database: ${config.database.url}`);
+    });
+  }
 }
