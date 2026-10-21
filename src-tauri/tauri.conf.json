@@ -29,12 +29,22 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "publisher": "Zakariya Educational Complex",
+    "copyright": "Copyright © 2026 Zakariya Educational Complex",
+    "category": "Education",
+    "shortDescription": "ZEC Portal - College Management Desktop Software",
+    "longDescription": "College Management & Academic Fee Portal for Zakariya Educational Complex",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
   }
 }
